@@ -1,155 +1,227 @@
-# ADD_OPSRAG
+# ASSIST OPSRAG
 
-## Visão geral
+## Visão Geral
 
-O **ADD_OPSRAG** é um backend corporativo baseado em **RAG (Retrieval-Augmented Generation)**, desenhado para centralizar documentação interna e conhecimento operacional. A solução permite que equipes consultem processos, ferramentas e fluxos de trabalho específicos da empresa por meio de LLMs, com respostas contextualizadas e rastreáveis.
-
-**Proposta de valor:** reduzir tempo de busca por informação, padronizar respostas internas e acelerar tomada de decisão com base em documentação confiável.
+O **ASSIST OPSRAG** é um sistema RAG (Retrieval-Augmented Generation) baseado em FastAPI e React, projetado para consultar documentação interna através de IA com respostas contextualizadas e rastreáveis.
 
 ---
 
-## Por que esse projeto importa
+## Stack Tecnológico
 
-Empresas com grande volume de processos enfrentam desafios recorrentes:
+### Backend
+- **Python** 3.11+
+- **FastAPI** - Framework web
+- **LangChain** - Pipeline RAG
+- **OpenAI** - LLM e embeddings
+- **ChromaDB** - Vector store
 
-- dispersão de conhecimento em múltiplos repositórios;
-- retrabalho em suporte interno;
-- onboarding lento de novas pessoas;
-- dificuldade em manter a documentação como “fonte única da verdade”.
-
-O **ADD_OPSRAG** resolve esse problema com uma camada de IA que consulta **documentos internos** e devolve respostas claras **com evidência de origem**.
-
----
-
-## Funcionalidades principais
-
-- **Ingestão de documentação Markdown** com pipeline automatizado.
-- **Indexação vetorial com ChromaDB** para busca semântica.
-- **API de consulta (`/ask`)** com resposta contextualizada e **fontes**.
-- **Configuração via `.env`** para troca rápida de modelos e storage.
-- **Arquitetura modular** (API, core, RAG) pronta para expansão.
+### Frontend
+- **React** 18 com Vite
+- **TailwindCSS** - Estilização
+- **Lucide React** - Ícones
 
 ---
 
-## Arquitetura (alto nível)
+## Pré-requisitos
 
-1. **Ingestão** de documentos `.md`.
-2. **Chunking** e criação de embeddings.
-3. **Persistência** em vector store.
-4. **Consulta** via API com recuperação + geração.
-
----
-
-## Stack
-
-- **FastAPI** (API backend)
-- **LangChain** (pipeline RAG)
-- **OpenAI** (LLM + embeddings)
-- **ChromaDB** (vector store)
-- **Python**
+- Python 3.11 ou superior
+- Node.js 18+ e npm
+- Chave de API da OpenAI
 
 ---
 
-## Estrutura do projeto
+## Instalação e Execução
 
-```text
-backend/
-  app/
-    api/           # Rotas HTTP
-    core/          # Configurações
-    rag/           # Ingestão, retriever e prompt
-    main.py        # Inicialização da API
-  scripts/
-  .env.example
-  requirements.txt
-```
+### Backend
 
----
-
-## Endpoints
-
-- `GET /health` — health check da API
-- `POST /ingest` — ingestão de documentos Markdown
-- `POST /ask` — consulta com recuperação de contexto
-
----
-
-## Execução local
-
-### 1) Ambiente
-
+1. **Navegue até a pasta do backend:**
 ```bash
 cd backend
-python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
+```
+
+2. **Instale as dependências:**
+```bash
+python -m pip install -r requirements.txt
+```
+
+3. **Configure as variáveis de ambiente:**
+
+Copie o arquivo `.env.example` para `.env` e configure sua chave da OpenAI:
+```bash
 cp .env.example .env
 ```
 
-### 2) Configuração (`.env`)
-
-Ajuste as variáveis conforme sua infraestrutura:
-
-- `OPENAI_API_KEY`
-- `OPENAI_MODEL`
-- `OPENAI_EMBEDDING_MODEL`
-- `CHROMA_PERSIST_DIR`
-- `RAW_MD_DIR`
-
-### 3) Subir API
-
-```bash
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+Edite o arquivo `.env` e adicione sua chave:
+```
+OPENAI_API_KEY=sua-chave-aqui
+OPENAI_MODEL=gpt-4
+OPENAI_EMBEDDING_MODEL=text-embedding-3-large
+CHROMA_PERSIST_DIR=app/data/index
+RAW_MD_DIR=app/data/raw_md
 ```
 
-### 4) Ingestão
+4. **Execute o backend:**
 
-Coloque os arquivos `.md` em `app/data/raw_md` e rode:
-
+**Windows:**
 ```bash
-curl -X POST http://localhost:8000/ingest
+start_backend.bat
+```
+
+**Ou manualmente:**
+```bash
+set PYDANTIC_V1_COMPAT=1
+python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+**Linux/Mac:**
+```bash
+export PYDANTIC_V1_COMPAT=1
+python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+O backend estará disponível em: **http://localhost:8000**
+
+---
+
+### Frontend
+
+1. **Navegue até a pasta do frontend:**
+```bash
+cd frontend
+```
+
+2. **Instale as dependências:**
+```bash
+npm install
+```
+
+3. **Execute o frontend:**
+
+**Windows (PowerShell):**
+```powershell
+powershell -ExecutionPolicy Bypass -Command "npm run dev"
+```
+
+**Linux/Mac:**
+```bash
+npm run dev
+```
+
+O frontend estará disponível em: **http://localhost:3000**
+
+---
+
+## Uso
+
+### 1. Ingestão de Documentos
+
+Coloque seus arquivos `.md` na pasta `backend/app/data/raw_md/` e execute a ingestão:
+
+- Acesse a aba **"Ingestão"** no frontend
+- Clique em **"Iniciar Ingestão"**
+- Aguarde o processamento dos documentos
+
+### 2. Consultas
+
+- Acesse a aba **"Assistente"**
+- Digite sua pergunta sobre a documentação
+- Receba respostas contextualizadas com fontes
+
+### 3. Dashboard
+
+- Acesse a aba **"Dashboard"**
+- Visualize estatísticas sobre documentos e consultas
+
+---
+
+## Arquivos de Exemplo
+
+O projeto inclui 10 arquivos markdown de exemplo na pasta `mdexamples/` simulando documentação de uma empresa fictícia (TechNova Solutions):
+
+- Política de Segurança
+- Onboarding de Colaboradores
+- Processos de TI
+- Desenvolvimento de Software
+- Política de Férias
+- Produtos e Serviços
+- Compliance e Ética
+- Arquitetura de Sistemas
+- Procedimentos de Vendas
+- Suporte ao Cliente
+
+Para usar os exemplos, copie os arquivos para `backend/app/data/raw_md/` e execute a ingestão.
+
+---
+
+## Endpoints da API
+
+| Endpoint | Método | Descrição |
+|----------|--------|-----------|
+| `/health` | GET | Health check |
+| `/ingest` | POST | Ingestão de documentos |
+| `/ask` | POST | Consulta ao RAG |
+| `/stats` | GET | Estatísticas |
+
+---
+
+## Estrutura do Projeto
+
+```
+add_opsrag/
+├── backend/
+│   ├── app/
+│   │   ├── api/          # Rotas HTTP
+│   │   ├── core/         # Configurações
+│   │   ├── rag/          # Pipeline RAG
+│   │   ├── data/         # Dados e índices
+│   │   └── main.py       # Aplicação principal
+│   ├── requirements.txt
+│   ├── start_backend.bat
+│   └── .env.example
+├── frontend/
+│   ├── src/
+│   │   ├── components/   # Componentes React
+│   │   ├── context/      # Context API
+│   │   ├── api.js        # Cliente API
+│   │   └── main.jsx      # Entry point
+│   ├── package.json
+│   └── vite.config.js
+└── mdexamples/           # Documentos de exemplo
 ```
 
 ---
 
-## Exemplo de consulta
+## Troubleshooting
 
+### Erro: "No module named 'app'"
+
+Certifique-se de estar executando o uvicorn a partir da pasta `backend/`:
 ```bash
-curl -X POST http://localhost:8000/ask \
-  -H "Content-Type: application/json" \
-  -d '{"question":"Como funciona o processo de abertura de chamado?"}'
+cd backend
+python -m uvicorn app.main:app --reload
 ```
 
-**Resposta**
+### Erro: Pydantic V1 incompatível com Python 3.14
 
-```json
-{
-  "answer": "...",
-  "sources": [
-    "app/data/raw_md/procedimentos.md",
-    "app/data/raw_md/operacoes.md"
-  ]
-}
+Use Python 3.11 ou 3.12, ou defina a variável de ambiente:
+```bash
+set PYDANTIC_V1_COMPAT=1  # Windows
+export PYDANTIC_V1_COMPAT=1  # Linux/Mac
 ```
 
----
+### Erro: "npm não pode ser carregado" (Windows)
 
-## Diferenciais corporativos
+Execute com bypass de política:
+```powershell
+powershell -ExecutionPolicy Bypass -Command "npm run dev"
+```
 
-- **Centralização do conhecimento operacional** em uma única camada inteligente.
-- **Rastreabilidade** das respostas com fontes internas.
-- **Redução de tempo de atendimento** em suporte interno e operações.
-- **Acelerador de onboarding** para novos colaboradores.
-- **Base sólida para expansão** (auth, observabilidade, RBAC).
+### Frontend não conecta ao backend
 
----
-
-## Próximos passos sugeridos
-
-- Autenticação e autorização (RBAC).
-- Observabilidade (logs estruturados, métricas e tracing).
-- Versionamento e auditoria de documentos.
-- UI interna para consulta e feedback.
+Verifique se:
+1. O backend está rodando em `http://localhost:8000`
+2. O proxy está configurado em `frontend/vite.config.js`
+3. Ambos os servidores estão ativos
 
 ---
 
@@ -159,6 +231,10 @@ MIT
 
 ---
 
-## Repositório
+## Contato
 
-[GitHub](https://github.com/FelipeSousa366/add-opsrag)
+Para dúvidas ou sugestões sobre o projeto, abra uma issue no repositório.
+
+---
+
+*Última atualização: Fevereiro 2024*
