@@ -237,4 +237,4 @@ Para dúvidas ou sugestões sobre o projeto, abra uma issue no repositório.
 
 ---
 
-*Última atualização: Fevereiro 2024*
+*Última atualização: Fevereiro 2026*
