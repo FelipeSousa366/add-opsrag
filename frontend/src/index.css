@@ -2,9 +2,51 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --bg-primary: #111827;
+  --bg-secondary: #1f2937;
+  --bg-tertiary: #374151;
+  --bg-card: rgba(31, 41, 55, 0.9);
+  --border-color: rgba(75, 85, 99, 0.6);
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
+  --text-muted: #9ca3af;
+  --accent-primary: #3b82f6;
+  --accent-secondary: #60a5fa;
+  --accent-gradient-from: #3b82f6;
+  --accent-gradient-to: #60a5fa;
+}
+
+[data-theme="light"] {
+  --bg-primary: #f9fafb;
+  --bg-secondary: #f3f4f6;
+  --bg-tertiary: #e5e7eb;
+  --bg-card: rgba(255, 255, 255, 0.95);
+  --border-color: rgba(209, 213, 219, 0.8);
+  --text-primary: #111827;
+  --text-secondary: #374151;
+  --text-muted: #6b7280;
+  --accent-primary: #2563eb;
+  --accent-secondary: #3b82f6;
+  --accent-gradient-from: #2563eb;
+  --accent-gradient-to: #3b82f6;
+}
+
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
+
+.theme-bg-primary { background-color: var(--bg-primary); }
+.theme-bg-secondary { background-color: var(--bg-secondary); }
+.theme-bg-tertiary { background-color: var(--bg-tertiary); }
+.theme-bg-card { background-color: var(--bg-card); }
+.theme-border { border-color: var(--border-color); }
+.theme-text-primary { color: var(--text-primary); }
+.theme-text-secondary { color: var(--text-secondary); }
+.theme-text-muted { color: var(--text-muted); }
 
 .markdown-content h1 { @apply text-2xl font-bold mb-4 mt-6; }
 .markdown-content h2 { @apply text-xl font-semibold mb-3 mt-5; }
@@ -12,8 +54,9 @@ body {
 .markdown-content p { @apply mb-3 leading-relaxed; }
 .markdown-content ul { @apply list-disc list-inside mb-3 space-y-1; }
 .markdown-content ol { @apply list-decimal list-inside mb-3 space-y-1; }
-.markdown-content code { @apply bg-slate-100 px-1.5 py-0.5 rounded text-sm font-mono text-slate-800; }
-.markdown-content pre { @apply bg-slate-900 text-slate-100 p-4 rounded-lg mb-4 overflow-x-auto; }
-.markdown-content pre code { @apply bg-transparent text-slate-100 p-0; }
-.markdown-content blockquote { @apply border-l-4 border-blue-500 pl-4 italic text-slate-600 my-4; }
-.markdown-content a { @apply text-blue-600 hover:underline; }
+.markdown-content code { @apply px-1.5 py-0.5 rounded text-sm font-mono; background-color: var(--bg-tertiary); color: var(--text-primary); }
+.markdown-content pre { @apply p-4 rounded-lg mb-4 overflow-x-auto; background-color: var(--bg-secondary); color: var(--text-primary); }
+.markdown-content pre code { @apply bg-transparent p-0; }
+.markdown-content blockquote { @apply border-l-4 pl-4 italic my-4; border-color: var(--accent-primary); color: var(--text-secondary); }
+.markdown-content a { color: var(--accent-primary); }
+.markdown-content a:hover { text-decoration: underline; }
