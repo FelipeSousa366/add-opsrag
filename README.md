@@ -1,240 +1,256 @@
-# ASSIST OPSRAG
+# ASSIST OPS-RAG (add-opsrag)
 
-## Visão Geral
+![License](https://img.shields.io/badge/License-MIT-green.svg)
+![Python](https://img.shields.io/badge/Python-3.11%2B-blue.svg)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.100%2B-009688.svg?logo=fastapi&logoColor=white)
+![React](https://img.shields.io/badge/React-18-61DAFB.svg?logo=react&logoColor=000)
 
-O **ASSIST OPSRAG** é um sistema RAG (Retrieval-Augmented Generation) baseado em FastAPI e React, projetado para consultar documentação interna através de IA com respostas contextualizadas e rastreáveis.
+**ASSIST OPS-RAG** é um assistente de documentação baseado em **RAG (Retrieval-Augmented Generation)**: você indexa arquivos **Markdown** e consulta esse conhecimento via chat, recebendo respostas contextualizadas e acompanhadas de **fontes**.
+
+> Objetivo: centralizar conhecimento operacional/documentação (processos, runbooks, políticas, onboarding, etc.) e tornar a consulta mais rápida e rastreável.
 
 ---
 
-## Stack Tecnológico
+## O que você encontra aqui
 
-### Backend
-- **Python** 3.11+
-- **FastAPI** - Framework web
-- **LangChain** - Pipeline RAG
-- **OpenAI** - LLM e embeddings
-- **ChromaDB** - Vector store
+- **Ingestão de Markdown**: lê `.md`, faz chunking e gera embeddings.
+- **Base vetorial local (ChromaDB)** com persistência em disco.
+- **Chat com histórico** (o frontend envia o histórico recente junto da pergunta).
+- **Dashboard** com status, contagem de documentos/chunks e lista de arquivos indexados.
+- **Remoção de documento do índice** (remove do “memory” do RAG sem necessariamente apagar o arquivo do disco).
 
-### Frontend
-- **React** 18 com Vite
-- **TailwindCSS** - Estilização
-- **Lucide React** - Ícones
+---
+
+## Como funciona (visão rápida)
+
+1. Você coloca seus `.md` em `backend/app/data/raw_md/`.
+2. A ingestão divide o conteúdo em chunks e salva embeddings no Chroma.
+3. Ao perguntar, o backend recupera os trechos mais relevantes (top-k) e envia **contexto + pergunta** para o modelo.
+4. A resposta volta com uma lista de **sources** para rastreabilidade.
+
+---
+
+## Stack
+
+**Backend**
+- Python 3.11+
+- FastAPI + Uvicorn
+- LangChain (pipeline RAG)
+- ChromaDB (vector store)
+- OpenAI (LLM + embeddings)
+
+**Frontend**
+- React 18 (Vite)
+- TailwindCSS
+- Lucide React
 
 ---
 
 ## Pré-requisitos
 
-- Python 3.11 ou superior
-- Node.js 18+ e npm
-- Chave de API da OpenAI
+- **Python 3.11+**
+- **Node.js 18+** (npm)
+- **Chave de API da OpenAI**
 
 ---
 
-## Instalação e Execução
+## Quickstart (desenvolvimento local)
 
-### Backend
+### 1) Clone o repositório
+```bash
+git clone https://github.com/FelipeSousa366/add-opsrag.git
+cd add-opsrag
+````
 
-1. **Navegue até a pasta do backend:**
+### 2) Backend (FastAPI)
+
 ```bash
 cd backend
+python -m venv venv
 ```
 
-2. **Instale as dependências:**
+Ative o ambiente virtual:
+
+**Windows (cmd)**
+
+```bat
+venv\Scripts\activate
+```
+
+**Linux/Mac**
+
+```bash
+source venv/bin/activate
+```
+
+Instale as dependências:
+
 ```bash
 python -m pip install -r requirements.txt
 ```
 
-3. **Configure as variáveis de ambiente:**
+Crie o arquivo de ambiente:
 
-Copie o arquivo `.env.example` para `.env` e configure sua chave da OpenAI:
 ```bash
 cp .env.example .env
 ```
 
-Edite o arquivo `.env` e adicione sua chave:
-```
-OPENAI_API_KEY=sua-chave-aqui
-OPENAI_MODEL=gpt-4
+Edite o `.env` com sua chave:
+
+```env
+OPENAI_API_KEY=coloque_sua_chave_aqui
+OPENAI_MODEL=gpt-4.1
 OPENAI_EMBEDDING_MODEL=text-embedding-3-large
+
 CHROMA_PERSIST_DIR=app/data/index
 RAW_MD_DIR=app/data/raw_md
 ```
 
-4. **Execute o backend:**
+Suba o servidor:
 
-**Windows:**
-```bash
+**Windows (script pronto)**
+
+```bat
 start_backend.bat
 ```
 
-**Ou manualmente:**
+**Manual (qualquer SO)**
+
 ```bash
-set PYDANTIC_V1_COMPAT=1
 python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-**Linux/Mac:**
-```bash
-export PYDANTIC_V1_COMPAT=1
-python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-```
+Backend:
 
-O backend estará disponível em: **http://localhost:8000**
+* API: `http://localhost:8000`
+* Docs (Swagger): `http://localhost:8000/docs`
 
 ---
 
-### Frontend
+### 3) Frontend (React + Vite)
 
-1. **Navegue até a pasta do frontend:**
+Em outro terminal:
+
 ```bash
 cd frontend
-```
-
-2. **Instale as dependências:**
-```bash
 npm install
-```
-
-3. **Execute o frontend:**
-
-**Windows (PowerShell):**
-```powershell
-powershell -ExecutionPolicy Bypass -Command "npm run dev"
-```
-
-**Linux/Mac:**
-```bash
 npm run dev
 ```
 
-O frontend estará disponível em: **http://localhost:3000**
+Frontend:
+
+* `http://localhost:3000`
+
+> Em desenvolvimento, o Vite já faz **proxy** de `/api` → `http://localhost:8000`.
 
 ---
 
-## Uso
+## Usando o sistema
 
-### 1. Ingestão de Documentos
+### 1) Adicione seus documentos
 
-Coloque seus arquivos `.md` na pasta `backend/app/data/raw_md/` e execute a ingestão:
+Coloque arquivos `.md` em:
 
-- Acesse a aba **"Ingestão"** no frontend
-- Clique em **"Iniciar Ingestão"**
-- Aguarde o processamento dos documentos
+```
+backend/app/data/raw_md/
+```
 
-### 2. Consultas
+### 2) Faça a ingestão
 
-- Acesse a aba **"Assistente"**
-- Digite sua pergunta sobre a documentação
-- Receba respostas contextualizadas com fontes
+Pelo frontend, na aba **Ingestão**, clique em **Iniciar Ingestão**.
 
-### 3. Dashboard
+### 3) Pergunte no chat
 
-- Acesse a aba **"Dashboard"**
-- Visualize estatísticas sobre documentos e consultas
+Na aba **Assistente**, faça perguntas sobre o conteúdo indexado.
+As respostas trazem uma lista de fontes (arquivos) usadas no contexto.
 
----
+### 4) Acompanhe no Dashboard
 
-## Arquivos de Exemplo
+A aba **Dashboard** mostra:
 
-O projeto inclui 10 arquivos markdown de exemplo na pasta `mdexamples/` simulando documentação de uma empresa fictícia (TechNova Solutions):
-
-- Política de Segurança
-- Onboarding de Colaboradores
-- Processos de TI
-- Desenvolvimento de Software
-- Política de Férias
-- Produtos e Serviços
-- Compliance e Ética
-- Arquitetura de Sistemas
-- Procedimentos de Vendas
-- Suporte ao Cliente
-
-Para usar os exemplos, copie os arquivos para `backend/app/data/raw_md/` e execute a ingestão.
+* Status do serviço
+* Quantidade de documentos
+* Quantidade de chunks indexados
+* Lista de arquivos (com opção de remover do índice)
 
 ---
 
 ## Endpoints da API
 
-| Endpoint | Método | Descrição |
-|----------|--------|-----------|
-| `/health` | GET | Health check |
-| `/ingest` | POST | Ingestão de documentos |
-| `/ask` | POST | Consulta ao RAG |
-| `/stats` | GET | Estatísticas |
+| Endpoint                | Método | Descrição                                             |
+| ----------------------- | -----: | ----------------------------------------------------- |
+| `/health`               |    GET | Health check                                          |
+| `/ingest`               |   POST | Processa os `.md` e persiste o índice vetorial        |
+| `/ask`                  |   POST | Consulta ao RAG (retorna resposta + sources)          |
+| `/stats`                |    GET | Estatísticas (documentos, chunks e lista de arquivos) |
+| `/documents/{filename}` | DELETE | Remove do índice os chunks do arquivo                 |
+
+### Exemplo: pergunta (`/ask`)
+
+```bash
+curl -X POST http://localhost:8000/ask \
+  -H "Content-Type: application/json" \
+  -d '{
+    "question": "Como funciona a ingestão?",
+    "history": [
+      { "role": "user", "content": "Olá!" },
+      { "role": "assistant", "content": "Oi! Como posso ajudar?" }
+    ]
+  }'
+```
 
 ---
 
-## Estrutura do Projeto
+## Documentos de exemplo
+
+A pasta `mdexamples/` contém arquivos de exemplo (Markdown) para testar a ingestão e o chat.
+
+Sugestão de uso:
+
+1. Copie os `.md` de `mdexamples/` para `backend/app/data/raw_md/`
+2. Execute a ingestão
+3. Faça perguntas no chat
+
+---
+
+## Estrutura do repositório
 
 ```
-add_opsrag/
+add-opsrag/
 ├── backend/
 │   ├── app/
-│   │   ├── api/          # Rotas HTTP
-│   │   ├── core/         # Configurações
-│   │   ├── rag/          # Pipeline RAG
-│   │   ├── data/         # Dados e índices
-│   │   └── main.py       # Aplicação principal
+│   │   ├── api/               # Rotas HTTP
+│   │   ├── core/              # Configurações (.env)
+│   │   ├── rag/               # Ingestão, retriever e prompt
+│   │   ├── data/
+│   │   │   ├── raw_md/        # Documentos Markdown (entrada)
+│   │   │   └── index/         # Índice vetorial (persistência)
+│   │   └── main.py            # App FastAPI
 │   ├── requirements.txt
 │   ├── start_backend.bat
 │   └── .env.example
 ├── frontend/
 │   ├── src/
-│   │   ├── components/   # Componentes React
-│   │   ├── context/      # Context API
-│   │   ├── api.js        # Cliente API
-│   │   └── main.jsx      # Entry point
 │   ├── package.json
 │   └── vite.config.js
-└── mdexamples/           # Documentos de exemplo
+└── mdexamples/
 ```
 
 ---
 
-## Troubleshooting
+## Ajustes comuns (customização)
 
-### Erro: "No module named 'app'"
-
-Certifique-se de estar executando o uvicorn a partir da pasta `backend/`:
-```bash
-cd backend
-python -m uvicorn app.main:app --reload
-```
-
-### Erro: Pydantic V1 incompatível com Python 3.14
-
-Use Python 3.11 ou 3.12, ou defina a variável de ambiente:
-```bash
-set PYDANTIC_V1_COMPAT=1  # Windows
-export PYDANTIC_V1_COMPAT=1  # Linux/Mac
-```
-
-### Erro: "npm não pode ser carregado" (Windows)
-
-Execute com bypass de política:
-```powershell
-powershell -ExecutionPolicy Bypass -Command "npm run dev"
-```
-
-### Frontend não conecta ao backend
-
-Verifique se:
-1. O backend está rodando em `http://localhost:8000`
-2. O proxy está configurado em `frontend/vite.config.js`
-3. Ambos os servidores estão ativos
+* **Chunking**: `backend/app/rag/ingest.py` (tamanho e overlap)
+* **Quantidade de contexto (top-k)**: `backend/app/rag/retriever.py`
+* **Prompt do assistente**: `backend/app/rag/prompt.py`
+* **Modelos**: via `.env` (`OPENAI_MODEL`, `OPENAI_EMBEDDING_MODEL`)
 
 ---
 
 ## Licença
 
-MIT
+Distribuído sob licença **MIT**.
 
 ---
 
-## Contato
 
-Para dúvidas ou sugestões sobre o projeto, abra uma issue no repositório.
-
----
-
-*Última atualização: Fevereiro 2026*
