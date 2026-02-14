@@ -13,4 +13,5 @@ def get_retriever():
         embedding_function=embeddings
     )
 
-    return vectorstore.as_retriever(search_kwargs={"k": 4})
+    return vectorstore.as_retriever(search_kwargs={"k": 4}) 
+    #parametro K define quantos documentos ou chunks o modelo ira usar por contexto

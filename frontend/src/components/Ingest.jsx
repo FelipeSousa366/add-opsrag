@@ -25,43 +25,43 @@ function Ingest() {
   return (
     <div className="max-w-2xl mx-auto">
       <div className="text-center mb-8">
-        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center mx-auto mb-4">
+        <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: 'linear-gradient(to bottom right, var(--accent-gradient-from), var(--accent-gradient-to))' }}>
           <Upload className="w-8 h-8 text-white" />
         </div>
-        <h2 className="text-2xl font-bold text-white mb-2">Ingestão de Documentos</h2>
-        <p className="text-slate-400">
-          Processa os arquivos Markdown da pasta <code className="text-emerald-400">raw_md</code> e 
+        <h2 className="text-2xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>Ingestão de Documentos</h2>
+        <p style={{ color: 'var(--text-secondary)' }}>
+          Processa os arquivos Markdown da pasta <code style={{ color: 'var(--accent-primary)' }}>raw_md</code> e 
           atualiza o índice vetorial para consultas.
         </p>
       </div>
 
-      <div className="bg-slate-800/50 rounded-2xl border border-slate-700/50 p-6">
+      <div className="rounded-2xl p-6" style={{ background: 'var(--bg-card)', border: '1px solid var(--border-color)' }}>
         <div className="space-y-4">
-          <div className="flex items-start gap-3 p-4 rounded-xl bg-slate-900/50">
-            <FileText className="w-5 h-5 text-blue-400 mt-0.5" />
+          <div className="flex items-start gap-3 p-4 rounded-xl" style={{ background: 'var(--bg-secondary)' }}>
+            <FileText className="w-5 h-5 mt-0.5" style={{ color: 'var(--accent-primary)' }} />
             <div>
-              <h3 className="font-medium text-white">Arquivos Markdown</h3>
-              <p className="text-sm text-slate-400">
+              <h3 className="font-medium" style={{ color: 'var(--text-primary)' }}>Arquivos Markdown</h3>
+              <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
                 Coloque seus arquivos <code>.md</code> na pasta <code>backend/app/data/raw_md</code>
               </p>
             </div>
           </div>
 
-          <div className="flex items-start gap-3 p-4 rounded-xl bg-slate-900/50">
-            <Layers className="w-5 h-5 text-purple-400 mt-0.5" />
+          <div className="flex items-start gap-3 p-4 rounded-xl" style={{ background: 'var(--bg-secondary)' }}>
+            <Layers className="w-5 h-5 mt-0.5" style={{ color: 'var(--accent-secondary)' }} />
             <div>
-              <h3 className="font-medium text-white">Chunking Inteligente</h3>
-              <p className="text-sm text-slate-400">
+              <h3 className="font-medium" style={{ color: 'var(--text-primary)' }}>Chunking Inteligente</h3>
+              <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
                 Documentos são divididos em chunks de 1000 caracteres com overlap de 200
               </p>
             </div>
           </div>
 
-          <div className="flex items-start gap-3 p-4 rounded-xl bg-slate-900/50">
+          <div className="flex items-start gap-3 p-4 rounded-xl" style={{ background: 'var(--bg-secondary)' }}>
             <Clock className="w-5 h-5 text-amber-400 mt-0.5" />
             <div>
-              <h3 className="font-medium text-white">Processamento</h3>
-              <p className="text-sm text-slate-400">
+              <h3 className="font-medium" style={{ color: 'var(--text-primary)' }}>Processamento</h3>
+              <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
                 O tempo varia conforme a quantidade de documentos. Aguarde a conclusão.
               </p>
             </div>
@@ -71,7 +71,8 @@ function Ingest() {
         <button
           onClick={handleIngest}
           disabled={loading}
-          className="w-full mt-6 py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold flex items-center justify-center gap-2 hover:from-emerald-400 hover:to-teal-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          className="w-full mt-6 py-4 rounded-xl text-white font-semibold flex items-center justify-center gap-2 hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          style={{ background: 'linear-gradient(to right, var(--accent-gradient-from), var(--accent-gradient-to))' }}
         >
           {loading ? (
             <>
@@ -94,16 +95,16 @@ function Ingest() {
             </div>
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
-                <div className="text-2xl font-bold text-white">{result.files}</div>
-                <div className="text-xs text-slate-400">Arquivos</div>
+                <div className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>{result.files}</div>
+                <div className="text-xs" style={{ color: 'var(--text-secondary)' }}>Arquivos</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-white">{result.chunks}</div>
-                <div className="text-xs text-slate-400">Chunks</div>
+                <div className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>{result.chunks}</div>
+                <div className="text-xs" style={{ color: 'var(--text-secondary)' }}>Chunks</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-white">{result.elapsed_seconds}s</div>
-                <div className="text-xs text-slate-400">Tempo</div>
+                <div className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>{result.elapsed_seconds}s</div>
+                <div className="text-xs" style={{ color: 'var(--text-secondary)' }}>Tempo</div>
               </div>
             </div>
           </div>

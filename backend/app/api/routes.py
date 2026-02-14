@@ -91,3 +91,36 @@ def stats():
         "chunks": chunks_count,
         "files": files
     }
+
+@router.delete("/documents/{filename}")
+def delete_document(filename: str):
+    import os
+    from langchain_community.vectorstores import Chroma
+    from langchain_openai import OpenAIEmbeddings
+    
+    embeddings = OpenAIEmbeddings(
+        model=settings.openai_embedding_model,
+        api_key=settings.openai_api_key
+    )
+    
+    vectorstore = Chroma(
+        persist_directory=settings.chroma_persist_dir,
+        embedding_function=embeddings
+    )
+    
+    md_dir = settings.raw_md_dir
+    file_path = os.path.join(md_dir, filename)
+    
+    collection = vectorstore._collection
+    results = collection.get(where={"source": file_path})
+    
+    deleted_chunks = 0
+    if results and results["ids"]:
+        collection.delete(ids=results["ids"])
+        deleted_chunks = len(results["ids"])
+    
+    return {
+        "status": "ok",
+        "filename": filename,
+        "deleted_chunks": deleted_chunks
+    }

@@ -29,3 +29,11 @@ export async function getStats() {
   if (!response.ok) throw new Error('Erro ao obter estatísticas');
   return response.json();
 }
+
+export async function deleteDocument(filename) {
+  const response = await fetch(`${API_BASE}/documents/${encodeURIComponent(filename)}`, {
+    method: 'DELETE'
+  });
+  if (!response.ok) throw new Error('Erro ao excluir documento');
+  return response.json();
+}
