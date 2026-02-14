@@ -9,7 +9,7 @@ logging.basicConfig(
 )
 logging.getLogger("ingest").propagate = True
 
-app = FastAPI(title="ADD OPSRAG API")
+app = FastAPI(title="ASSIST OPSRAG API")
 
 app.add_middleware(
     CORSMiddleware,
