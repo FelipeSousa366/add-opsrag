@@ -25,6 +25,13 @@ backend/app/data/raw_md/
 *.log
 
 # =========================
+# Node.js / Frontend
+# =========================
+node_modules/
+dist/
+build/
+
+# =========================
 # Sistema
 # =========================
 .DS_Store
